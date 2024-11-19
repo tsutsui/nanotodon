@@ -3,6 +3,10 @@
 #include <string.h>
 #include "utils.h"
 
+#ifdef OPENSSL_SET_CIPHER
+#include <openssl/ssl.h>
+#endif
+
 extern char domain_string[256];
 
 // Unicode文字列の幅を返す(半角文字=1)
@@ -167,3 +171,29 @@ size_t buffer_writer(char *ptr, size_t size, size_t nmemb, void *stream) {
 
     return block;
 }
+
+#ifdef OPENSSL_SET_CIPHER
+// force to use TLS 1.2 and set cipher suites via OpenSSL 3.x APIs
+CURLcode curl_set_cipher(CURL *curl, void *sslctx, void *parm)
+{
+    SSL_CTX *ctx = (SSL_CTX *)sslctx;
+    const char *cipher_list =
+        "AES128-SHA"
+        ":AES128-SHA256"
+        ":AES256-SHA256"
+        ":AES128-GCM-SHA256"
+        ":ECDHE-ECDSA-AES128-GCM-SHA256"
+#if 0
+        ":ECDHE-ECDSA-AES256-GCM-SHA384"
+#endif
+        ;
+
+    SSL_CTX_set_options(ctx, SSL_OP_NO_TLSv1_3);
+
+    if (SSL_CTX_set_cipher_list(ctx, cipher_list) == 0) {
+	fprintf(stderr, "Failed to set cipher suites\n");
+        return CURLE_SSL_CIPHER;
+    }
+    return CURLE_OK;
+}
+#endif

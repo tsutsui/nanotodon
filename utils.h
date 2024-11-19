@@ -21,5 +21,8 @@ struct rawBuffer {
 };
 
 size_t buffer_writer(char *ptr, size_t size, size_t nmemb, void *stream);
+#ifdef OPENSSL_SET_CIPHER
+CURLcode curl_set_cipher(CURL *curl, void *sslctx, void *parm);
+#endif
 
 #endif

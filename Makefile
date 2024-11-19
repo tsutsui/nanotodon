@@ -16,6 +16,9 @@ CFLAGS += -DSUPPORT_XDG_BASE_DIR
 #CFLAGS += -DUSE_WEBP
 #LDLIBS += -lwebp
 
+# EXPERIMENTAL: set cipher suites via OpenSSL 3.x callbacks
+CFLAGS += -DOPENSSL_SET_CIPHER
+
 # for pkgsrc 
 #CFLAGS += -I/usr/pkg/include
 #LDFLAGS += -L/usr/pkg/lib -Wl,-R/usr/pkg/lib

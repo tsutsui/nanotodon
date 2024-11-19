@@ -465,6 +465,9 @@ static void *stream_thread_func(void *param)
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *)&streaming_json);
 	curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, streaming_callback);
 	curl_easy_setopt(hnd, CURLOPT_ERRORBUFFER, errbuf);
+#ifdef OPENSSL_SET_CIPHER
+	curl_easy_setopt(hnd, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
 	streaming_received_handler = streaming_received;
 	stream_event_handler = NULL;
@@ -540,6 +543,9 @@ void do_create_client(char *domain, char *dot_ckcs)
 	curl_easy_setopt(hnd, CURLOPT_TCP_KEEPALIVE, 1L);
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, f);	// データの保存先ファイルポインタを指定
 	curl_easy_setopt(hnd, CURLOPT_ERRORBUFFER, errbuf);
+#ifdef OPENSSL_SET_CIPHER
+	curl_easy_setopt(hnd, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
 	ret = curl_easy_perform(hnd);
 	if(ret != CURLE_OK) curl_fatal(ret, errbuf);
@@ -598,6 +604,9 @@ void do_oauth(char *code, char *ck, char *cs)
 	curl_easy_setopt(hnd, CURLOPT_TCP_KEEPALIVE, 1L);
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, f);	// データの保存先ファイルポインタを指定
 	curl_easy_setopt(hnd, CURLOPT_ERRORBUFFER, errbuf);
+#ifdef OPENSSL_SET_CIPHER
+	curl_easy_setopt(hnd, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
 	ret = curl_easy_perform(hnd);
 	if(ret != CURLE_OK) curl_fatal(ret, errbuf);
@@ -663,6 +672,9 @@ void do_toot(char *s)
 	curl_easy_setopt(hnd, CURLOPT_TCP_KEEPALIVE, 1L);
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, f);
 	curl_easy_setopt(hnd, CURLOPT_ERRORBUFFER, errbuf);
+#ifdef OPENSSL_SET_CIPHER
+	curl_easy_setopt(hnd, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
 	ret = curl_easy_perform(hnd);
 	if(ret != CURLE_OK) curl_fatal(ret, errbuf);
@@ -735,6 +747,9 @@ void get_timeline(void)
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *)&json);
 	curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, htl_callback);
 	curl_easy_setopt(hnd, CURLOPT_ERRORBUFFER, errbuf);
+#ifdef OPENSSL_SET_CIPHER
+	curl_easy_setopt(hnd, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
 	ret = curl_easy_perform(hnd);
 	if(ret != CURLE_OK) curl_fatal(ret, errbuf);

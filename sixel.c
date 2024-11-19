@@ -121,6 +121,9 @@ void print_picture(sbctx_t *sbctx, char *uri, int mul)
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, buf);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, buffer_writer);
+#ifdef OPENSSL_SET_CIPHER
+    curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, curl_set_cipher);
+#endif
 
     curl_easy_perform(curl);
     curl_easy_cleanup(curl);

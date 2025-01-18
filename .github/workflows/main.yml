@@ -125,15 +125,20 @@ jobs:
             make clean
             CFLAGS="-I/usr/pkg/include -DUSE_SIXEL -DUSE_WEBP" LDFLAGS="-L/usr/pkg/lib -Wl,-R/usr/pkg/lib" LDLIBS="-lwebp" make
 
-  build-netbsd-vax:
-    name: "build-netbsd (NetBSD/vax 10.1 with pkgsrc)"
+  build-netbsd-cross-live-ci:
+    name: "build netbsd-cross-live-ci"
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: [alpha, evbarm-aarch64, evbarm-earmv7hf, i386, macppc, sparc, sparc64, vax]
+
     steps:
-      - name: Build project in NetBSD/vax environment
+      - name: Build project in NetBSD/${{ matrix.machine }} environment
         uses: tsutsui/netbsd-cross-live-ci@master
         with:
-          machine: "vax"
+          machine: "${{ matrix.machine }}"
           release: "10.1"
 
           prepare:
